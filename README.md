@@ -114,7 +114,7 @@ Push to GitHub → Netlify builds → Live in ~30 seconds
 
 ## Built By
 
-**Eduard Rednic** — [github.com/Sairanyx](https://github.com/Sairanyx)
+**Eduard Rednic** - [github.com/Sairanyx](https://github.com/Sairanyx)
 
 B.Eng. ICT Student (Data Engineering & AI), Turku University of Applied Sciences  
 R&D Student Assistant, AIS Lab - Autonomous & Intelligent Systems
