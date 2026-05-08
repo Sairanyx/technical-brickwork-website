@@ -1,8 +1,8 @@
-# Technical Brickwork - Family owned Company Website
+# Technical Brickwork — Company Website
 
 A professional business website built for **Technical Brickwork Ltd**, a specialist bricklaying and masonry company based in Harrow, London. Established 2017.
 
-Live site: [technicalbrickwork.co.uk](https://technicalbrickwork.co.uk)
+Live site: [technicalbrickwork.co.uk](https://technicalbrickwork.co.uk) *(coming soon)*
 
 ---
 
@@ -33,7 +33,7 @@ This project involved taking an existing WordPress site and rebuilding it from s
 
 ## Features
 
-- Fully responsive - mobile, tablet, and desktop
+- Fully responsive — mobile, tablet, and desktop
 - Scroll-triggered reveal animations via IntersectionObserver
 - Mobile navigation with hamburger menu
 - Contact/quote form with Netlify Forms integration
@@ -105,20 +105,20 @@ Push to GitHub → Netlify builds → Live in ~30 seconds
 
 ## Design Decisions
 
-- **No framework** - the site is simple enough that React/Vue would add unnecessary complexity and bundle size
-- **Raleway font** - matches the logo typography, clean and professional
-- **Dark theme** - charcoal backgrounds with off-white text and warm gold accents
-- **Modular CSS** - all design tokens in `:root` variables for easy theming
+- **No framework** — the site is simple enough that React/Vue would add unnecessary complexity and bundle size
+- **Raleway font** — matches the logo typography, clean and professional
+- **Dark theme** — charcoal backgrounds with off-white text and warm gold accents
+- **Modular CSS** — all design tokens in `:root` variables for easy theming
 
 ---
 
 ## Built By
 
-**Eduard Rednic** - [github.com/Sairanyx](https://github.com/Sairanyx)
+**Eduard Rednic** — [github.com/Sairanyx](https://github.com/Sairanyx)
 
 B.Eng. ICT Student (Data Engineering & AI), Turku University of Applied Sciences  
-R&D Student Assistant, AIS Lab - Autonomous & Intelligent Systems
+R&D Student Assistant, AIS Lab — Autonomous & Intelligent Systems
 
 ---
 
-*This is a real project built for our family business.*
+*This is a real client project built for a family business.*
