@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get a Free Quote | Technical Brickwork</title>
+  <meta name="description" content="Request a free, no-obligation quote from Technical Brickwork. Specialist bricklayers based in Harrow, London." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script type="module" src="/src/quote.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --bg:      #1a1a1a;
+      --raised:  #222222;
+      --surface: #2a2a2a;
+      --text:    #f2f2f2;
+      --muted:   #888888;
+      --accent:  #c8a96e;
+      --border:  rgba(255,255,255,0.08);
+      --font:    'Raleway', sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 64px;
+      display: flex; align-items: center;
+      padding: 0 clamp(1.5rem, 6vw, 4rem);
+      background: rgba(26,26,26,0.95);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo img {
+      height: 38px; width: 38px; border-radius: 50%; object-fit: cover;
+    }
+    .nav-logo span {
+      font-size: 0.88rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text);
+    }
+    .nav-back {
+      font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--text); }
+
+    /* ── LAYOUT ── */
+    main {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 100px clamp(1.5rem, 6vw, 4rem) 4rem;
+    }
+
+    .quote-wrap {
+      width: 100%; max-width: 580px;
+    }
+
+    /* ── PROGRESS ── */
+    .progress {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 2.5rem;
+    }
+    .progress-step {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--muted); transition: color 0.3s;
+    }
+    .progress-step.active { color: var(--accent); }
+    .progress-step.done { color: var(--muted); }
+    .progress-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--border); transition: background 0.3s;
+      flex-shrink: 0;
+    }
+    .progress-step.active .progress-dot { background: var(--accent); }
+    .progress-step.done .progress-dot { background: var(--muted); }
+    .progress-line {
+      flex: 1; height: 1px; background: var(--border);
+    }
+
+    /* ── HEADINGS ── */
+    .step-label {
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--accent);
+      display: flex; align-items: center; gap: 0.8rem;
+      margin-bottom: 0.8rem;
+    }
+    .step-label::before {
+      content: ''; width: 24px; height: 1px; background: var(--accent);
+    }
+    h1 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800; line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: #ffffff; margin-bottom: 0.6rem;
+    }
+    .step-sub {
+      font-size: 0.92rem; font-weight: 300;
+      color: var(--muted); margin-bottom: 2.5rem;
+      line-height: 1.6;
+    }
+
+    /* ── FORM FIELDS ── */
+    .field { margin-bottom: 1rem; }
+    .field label {
+      display: block;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 6px;
+    }
+    .field input {
+      width: 100%;
+      background: var(--raised);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 14px 16px;
+      font-family: var(--font);
+      font-size: 1rem; font-weight: 400;
+      outline: none; border-radius: 2px;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+    .field input:focus { border-color: rgba(200,169,110,0.5); }
+    .field input::placeholder { color: #555; }
+
+    /* ── CONTACT CHOICE ── */
+    .contact-label {
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 10px;
+      display: block;
+    }
+    .contact-options {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .contact-btn {
+      background: var(--raised);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 14px 10px;
+      font-family: var(--font);
+      font-size: 0.82rem; font-weight: 600;
+      letter-spacing: 0.06em;
+      cursor: pointer; border-radius: 2px;
+      transition: all 0.2s;
+      text-align: center;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 6px;
+    }
+    .contact-btn .icon { font-size: 1.3rem; }
+    .contact-btn:hover { border-color: var(--accent); color: var(--text); }
+    .contact-btn.selected {
+      border-color: var(--accent);
+      background: rgba(200,169,110,0.1);
+      color: var(--accent);
+    }
+
+    /* ── SERVICE CARDS ── */
+    .services-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0.75rem; margin-bottom: 1.5rem;
+    }
+    .service-btn {
+      background: var(--raised);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 1.2rem 1rem;
+      font-family: var(--font);
+      font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; border-radius: 2px;
+      transition: all 0.2s; text-align: left;
+      line-height: 1.4;
+    }
+    .service-btn:hover { border-color: var(--accent); color: var(--text); }
+    .service-btn.selected {
+      border-color: var(--accent);
+      background: rgba(200,169,110,0.1);
+      color: var(--accent);
+    }
+    .service-btn .s-title {
+      display: block; font-size: 0.88rem;
+      font-weight: 700; color: inherit;
+      margin-bottom: 3px;
+    }
+    .service-btn .s-sub {
+      display: block; font-size: 0.72rem;
+      font-weight: 400; opacity: 0.65;
+    }
+
+    /* ── TEXT AREA ── */
+    .field textarea {
+      width: 100%;
+      background: var(--raised);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 14px 16px;
+      font-family: var(--font);
+      font-size: 0.95rem; font-weight: 400;
+      outline: none; border-radius: 2px;
+      resize: vertical; min-height: 100px;
+      transition: border-color 0.2s;
+    }
+    .field textarea:focus { border-color: rgba(200,169,110,0.5); }
+    .field textarea::placeholder { color: #555; }
+
+    /* ── BUTTONS ── */
+    .btn-next {
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 16px;
+      font-family: var(--font);
+      font-size: 0.88rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      cursor: pointer; border-radius: 2px;
+      transition: all 0.2s; margin-top: 0.5rem;
+    }
+    .btn-next:hover { background: var(--accent); color: var(--bg); }
+    .btn-next:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn-back {
+      background: none; border: none;
+      color: var(--muted);
+      font-family: var(--font);
+      font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      cursor: pointer; padding: 0;
+      margin-bottom: 2rem;
+      display: flex; align-items: center; gap: 0.5rem;
+      transition: color 0.2s;
+    }
+    .btn-back:hover { color: var(--text); }
+
+    /* ── SUCCESS ── */
+    .success-screen {
+      display: none; text-align: center;
+      padding: 2rem 0;
+    }
+    .success-icon {
+      font-size: 3rem; margin-bottom: 1.5rem;
+    }
+    .success-screen h2 {
+      font-size: 2rem; font-weight: 800;
+      color: #fff; margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    .success-screen p {
+      font-size: 1rem; font-weight: 300;
+      color: var(--muted); line-height: 1.7;
+      margin-bottom: 2rem; max-width: 420px; margin-inline: auto;
+    }
+    .success-contact {
+      background: var(--raised);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+    .success-contact p {
+      font-size: 0.85rem; margin-bottom: 0.5rem;
+      color: var(--muted);
+    }
+    .success-contact a {
+      font-size: 1rem; font-weight: 600;
+      color: var(--accent); text-decoration: none;
+    }
+
+    /* ── STEP VISIBILITY ── */
+    .step { display: none; }
+    .step.active { display: block; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 480px) {
+      .services-grid { grid-template-columns: 1fr; }
+      .contact-options { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png" alt="Technical Brickwork" />
+    <span>Technical Brickwork</span>
+  </a>
+  <a href="/#contact" class="nav-back">← Back</a>
+</nav>
+
+<main>
+  <div class="quote-wrap">
+
+    <!-- Progress -->
+    <div class="progress">
+      <div class="progress-step active" id="prog-1">
+        <div class="progress-dot"></div>
+        Your Details
+      </div>
+      <div class="progress-line"></div>
+      <div class="progress-step" id="prog-2">
+        <div class="progress-dot"></div>
+        The Job
+      </div>
+    </div>
+
+    <!-- ══ STEP 1 ══ -->
+    <div class="step active" id="step-1">
+      <p class="step-label">Step 1 of 2</p>
+      <h1>Let's get you a quote.</h1>
+      <p class="step-sub">Takes about 60 seconds. No obligation.</p>
+
+      <div class="field">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" name="name" placeholder="John Smith" autocomplete="name" />
+      </div>
+
+      <div class="field">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" placeholder="07700 900 000" autocomplete="tel" />
+      </div>
+
+      <div class="field">
+        <label for="email">Email Address <span style="opacity:0.4;font-weight:300;letter-spacing:0;text-transform:none">(optional)</span></label>
+        <input type="email" id="email" name="email" placeholder="john@example.com" autocomplete="email" />
+      </div>
+
+      <div class="field">
+        <label for="postcode">Postcode</label>
+        <input type="text" id="postcode" name="postcode" placeholder="HA1 1AA" autocomplete="postal-code" style="text-transform:uppercase" />
+      </div>
+
+      <span class="contact-label">How should we get back to you? <span style="opacity:0.45;font-weight:300;letter-spacing:0;text-transform:none">(select all that apply)</span></span>
+      <div class="contact-options">
+        <button class="contact-btn" data-value="call" type="button">
+          <span class="icon">📞</span>
+          Phone Call
+        </button>
+        <button class="contact-btn" data-value="whatsapp" type="button">
+          <span class="icon">💬</span>
+          WhatsApp
+        </button>
+        <button class="contact-btn" data-value="email" type="button">
+          <span class="icon">✉️</span>
+          Email
+        </button>
+      </div>
+
+      <button class="btn-next" id="btn-step1" type="button">Next →</button>
+    </div>
+
+    <!-- ══ STEP 2 ══ -->
+    <div class="step" id="step-2">
+      <button class="btn-back" id="btn-back" type="button">← Back</button>
+      <p class="step-label">Step 2 of 2</p>
+      <h1>About the job.</h1>
+      <p class="step-sub">Just a couple of quick questions so we know what you need.</p>
+
+      <span class="contact-label">What do you need?</span>
+      <div class="services-grid">
+        <button class="service-btn" data-value="bricklaying" type="button">
+          <span class="s-title">Bricklaying</span>
+          <span class="s-sub">Walls, extensions, new builds</span>
+        </button>
+        <button class="service-btn" data-value="repair" type="button">
+          <span class="s-title">Repair & Repointing</span>
+          <span class="s-sub">Cracks, repointing, restoration</span>
+        </button>
+        <button class="service-btn" data-value="garden" type="button">
+          <span class="s-title">Garden Features</span>
+          <span class="s-sub">Walls, patios, BBQs, steps</span>
+        </button>
+        <button class="service-btn" data-value="chimney" type="button">
+          <span class="s-title">Chimney & Fireplace</span>
+          <span class="s-sub">Repairs, rebuilds, new builds</span>
+        </button>
+        <button class="service-btn" data-value="commercial" type="button">
+          <span class="s-title">Commercial Work</span>
+          <span class="s-sub">Subcontracting, large projects</span>
+        </button>
+        <button class="service-btn" data-value="other" type="button">
+          <span class="s-title">Other</span>
+          <span class="s-sub">I'll describe it below</span>
+        </button>
+      </div>
+
+      <div class="field">
+        <label for="message">Anything else we should know? <span style="opacity:0.4;font-weight:300">(optional)</span></label>
+        <textarea id="message" name="message" placeholder="e.g. front garden wall about 5 metres, needs rebuilding from scratch..."></textarea>
+      </div>
+
+      <button class="btn-next" id="btn-submit" type="button">Send My Request</button>
+    </div>
+
+    <!-- ══ SUCCESS ══ -->
+    <div class="success-screen" id="success">
+      <div class="success-icon">✓</div>
+      <h2>Request received.</h2>
+      <p>We will be in touch shortly, usually within a few hours during the working day.</p>
+      <div class="success-contact">
+        <p>Or reach us directly:</p>
+        <a href="tel:+447438031478">+44 743 803 1478 · Stefan (Owner)</a><br><br>
+        <a href="mailto:info@technicalbrickwork.co.uk">info@technicalbrickwork.co.uk</a>
+      </div>
+      <a href="/" style="color:var(--muted);font-size:0.82rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase">← Back to website</a>
+    </div>
+
+  </div>
+</main>
+
+</body>
+</html>

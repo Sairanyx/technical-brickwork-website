@@ -456,6 +456,7 @@ h2.section-title {
 
 /* ── CONTACT ── */
 #contact { background: var(--bg-base); }
+#contact .container { display: block; }
 #contact .container {
   display: grid; grid-template-columns: 1fr 1.2fr;
   gap: 6rem; align-items: start;
@@ -555,8 +556,8 @@ h2.section-title {
   .nav-links { display: none; }
   .hamburger { display: flex; }
   #about .container,
-  #contact .container,
   #why .container { grid-template-columns: 1fr; gap: 3rem; }
+  #contact .container { display: block; }
   .why-img { display: none; }
   #stats .container { grid-template-columns: repeat(3, 1fr); }
   .gallery-grid {
@@ -564,6 +565,7 @@ h2.section-title {
     grid-auto-rows: 200px;
   }
   .gallery-item:first-child { grid-column: span 2; grid-row: span 1; }
+  .contact-cards { grid-template-columns: 1fr !important; }
 }
 @media (max-width: 600px) {
   .form-row { grid-template-columns: 1fr; }
