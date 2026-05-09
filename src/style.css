@@ -575,3 +575,28 @@ h2.section-title {
   #footer .container { flex-direction: column; text-align: center; }
   .footer-links { justify-content: center; }
 }
+
+/* ── STICKY CALL BUTTON (mobile only) ── */
+.sticky-call {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 999;
+  background: var(--accent);
+  color: var(--bg-base);
+  padding: 14px 20px;
+  border-radius: 50px;
+  font-family: var(--font);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  transition: transform 0.2s;
+}
+.sticky-call:hover { transform: scale(1.05); }
+
+@media (max-width: 768px) {
+  .sticky-call { display: flex; align-items: center; gap: 8px; }
+}
