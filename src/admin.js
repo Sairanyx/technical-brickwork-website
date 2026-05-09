@@ -134,6 +134,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   })
 
+  // Also check immediately in case init already fired
+  const currentUser = identity.currentUser()
+  if (currentUser) {
+    showAdmin()
+  }
+
   identity.on('login', () => {
     identity.close()
     showAdmin()
