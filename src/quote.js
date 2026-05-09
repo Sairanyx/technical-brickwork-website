@@ -93,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
       email:          data.email || 'Not provided',
       postcode:       data.postcode,
       contact_method: contactMethods,
+      contact: contactMethods,
       service:        data.service,
       message:        data.message
     }
