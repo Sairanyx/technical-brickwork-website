@@ -544,6 +544,30 @@ h2.section-title {
 }
 .footer-links a:hover { color: var(--text-primary); }
 
+/* ── STICKY CALL BUTTON (mobile only) ── */
+.sticky-call {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 998;
+  background: var(--accent);
+  color: var(--bg-base);
+  padding: 13px 20px;
+  border-radius: 50px;
+  font-family: var(--font);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  transition: transform 0.2s;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.sticky-call:hover { transform: scale(1.05); }
+
 /* ── REVEAL ── */
 .reveal {
   opacity: 0; transform: translateY(18px);
@@ -566,12 +590,46 @@ h2.section-title {
   }
   .gallery-item:first-child { grid-column: span 2; grid-row: span 1; }
   .contact-cards { grid-template-columns: 1fr !important; }
+  .team-grid { grid-template-columns: 1fr 1fr !important; }
 }
+
 @media (max-width: 600px) {
-  .form-row { grid-template-columns: 1fr; }
+  /* Fix overflow/side line issue */
+  html, body { overflow-x: hidden; max-width: 100vw; }
+  .container { padding: 0 1.2rem; }
+  section { padding: 3.5rem 0; }
+
+  /* Stats */
   #stats .container { grid-template-columns: repeat(3, 1fr); }
-  .gallery-grid { grid-template-columns: 1fr; }
+  .stat-num { font-size: 1.4rem; }
+  .stat-label { font-size: 0.6rem; }
+
+  /* Gallery */
+  .gallery-grid { grid-template-columns: 1fr; grid-auto-rows: 220px; }
   .gallery-item:first-child { grid-column: span 1; }
-  #footer .container { flex-direction: column; text-align: center; }
-  .footer-links { justify-content: center; }
+
+  /* Team — stack to 1 column on small phones */
+  .team-grid { grid-template-columns: 1fr !important; max-width: 340px !important; }
+
+  /* Contact — stack and hide image */
+  #contact > div { grid-template-columns: 1fr !important; }
+  .contact-image { display: none; }
+
+  /* Footer */
+  #footer .container { flex-direction: column; text-align: center; gap: 1rem; }
+  .footer-links { justify-content: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-copy { font-size: 0.7rem; }
+
+  /* Sticky call button — give space from bottom */
+  .sticky-call { display: flex; bottom: 1.2rem; right: 1rem; }
+
+  /* Hero scroll hint fix */
+  .hero-scroll-hint { display: none; }
+
+  /* Section titles */
+  h2.section-title { font-size: 1.8rem; }
+}
+
+@media (min-width: 601px) and (max-width: 960px) {
+  .sticky-call { display: flex; }
 }
