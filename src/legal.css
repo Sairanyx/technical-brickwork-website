@@ -1,0 +1,280 @@
+/* ============================================================
+   TECHNICAL BRICKWORK — Legal pages (privacy, cookies, terms)
+   ============================================================ */
+
+/* Raleway is loaded via <link> in each page's <head>. An @import here would
+   serialise the font fetch behind this stylesheet. */
+
+:root {
+  --bg-base:    #1a1a1a;
+  --bg-raised:  #222222;
+  --text-primary:   #f2f2f2;
+  --text-secondary: #b0b0b0;
+  --text-muted:     #686868;
+  --accent:         #c8a96e;
+  --border:         rgba(255,255,255,0.07);
+  --border-accent:  rgba(200,169,110,0.3);
+  --white: #ffffff;
+  --font: 'Raleway', sans-serif;
+  --transition: 0.25s ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+img { display: block; max-width: 100%; }
+a { color: inherit; }
+ul, ol { list-style: none; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── PAGE TRANSITIONS ── */
+/* Entry/exit opacity lives in each page's inline <head> style so it applies
+   before this file loads. Only the cross-document animation belongs here. */
+@view-transition { navigation: auto; }
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.28s;
+  animation-timing-function: ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation: none; }
+}
+
+/* ── NAV ── */
+.legal-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 clamp(1.5rem, 6vw, 4rem);
+  background: rgba(26,26,26,0.95);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo img { height: 38px; width: 38px; border-radius: 50%; object-fit: cover; }
+.nav-logo span {
+  font-size: 0.88rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-primary);
+}
+.nav-back {
+  font-size: 0.78rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-muted); text-decoration: none;
+  transition: color var(--transition);
+}
+.nav-back:hover { color: var(--text-primary); }
+
+/* ── LAYOUT ── */
+.legal-main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 128px clamp(1.2rem, 6vw, 2rem) 5rem;
+}
+
+.legal-label {
+  font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--accent);
+  display: flex; align-items: center; gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+.legal-label::before {
+  content: ''; width: 24px; height: 1px; background: var(--accent); flex-shrink: 0;
+}
+
+.legal-main h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800; line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--white);
+  margin-bottom: 0.8rem;
+}
+
+.legal-meta {
+  font-size: 0.8rem; font-weight: 400;
+  color: var(--text-muted);
+  padding-bottom: 2rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.legal-intro {
+  font-size: 1.02rem; font-weight: 300;
+  line-height: 1.85; color: var(--text-secondary);
+  margin-bottom: 3rem;
+}
+
+.legal-main h2 {
+  font-size: 1.25rem; font-weight: 700;
+  color: var(--white);
+  margin: 3rem 0 1rem;
+  letter-spacing: -0.01em;
+}
+.legal-main h2:first-of-type { margin-top: 0; }
+
+.legal-main h3 {
+  font-size: 0.82rem; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--accent);
+  margin: 2rem 0 0.8rem;
+}
+
+.legal-main p {
+  font-size: 0.95rem; font-weight: 300;
+  line-height: 1.85; color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+.legal-main p strong { color: var(--text-primary); font-weight: 600; }
+.legal-main a { color: var(--accent); }
+
+.legal-list { margin: 0 0 1.5rem; }
+.legal-list li {
+  font-size: 0.95rem; font-weight: 300;
+  line-height: 1.8; color: var(--text-secondary);
+  padding-left: 1.4rem; position: relative;
+  margin-bottom: 0.6rem;
+}
+.legal-list li::before {
+  content: ''; position: absolute;
+  left: 0; top: 0.85em;
+  width: 6px; height: 1px; background: var(--accent);
+}
+.legal-list li strong { color: var(--text-primary); font-weight: 600; }
+
+/* Data / cookie tables */
+.legal-table-wrap { overflow-x: auto; margin-bottom: 1.5rem; }
+.legal-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 0.88rem; min-width: 480px;
+}
+.legal-table th {
+  text-align: left;
+  font-size: 0.66rem; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0.8rem 1rem 0.8rem 0;
+  border-bottom: 1px solid var(--border-accent);
+  vertical-align: bottom;
+}
+.legal-table td {
+  font-weight: 300; color: var(--text-secondary);
+  padding: 0.9rem 1rem 0.9rem 0;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.7;
+}
+.legal-table td strong { color: var(--text-primary); font-weight: 600; }
+.legal-table tr:last-child td { border-bottom: none; }
+
+/* Callout box */
+.legal-callout {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent);
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+.legal-callout p:last-child { margin-bottom: 0; }
+.legal-callout p { font-size: 0.9rem; }
+
+/* Company details block */
+.legal-details {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+.legal-details dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.6rem 1.5rem;
+}
+.legal-details dt {
+  font-size: 0.66rem; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--text-muted);
+  padding-top: 0.15rem;
+}
+.legal-details dd {
+  font-size: 0.92rem; font-weight: 400;
+  color: var(--text-primary);
+}
+.legal-details dd a { color: var(--accent); text-decoration: none; }
+.legal-details dd a:hover { text-decoration: underline; }
+
+/* ── FOOTER (mirrors the main site footer) ── */
+.legal-footer {
+  background: #111111;
+  border-top: 1px solid var(--border);
+  padding: 2.5rem 0;
+}
+.legal-footer .footer-inner {
+  max-width: 1260px; margin: 0 auto;
+  padding: 0 clamp(1.5rem, 6vw, 5rem);
+}
+.legal-footer .footer-top {
+  display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;
+  padding-bottom: 1.8rem;
+  border-bottom: 1px solid var(--border);
+}
+.legal-footer .footer-logo {
+  display: flex; align-items: center; gap: 12px;
+  text-decoration: none; flex-shrink: 0;
+}
+.legal-footer .footer-logo img {
+  height: 36px; width: 36px;
+  border-radius: 50%; object-fit: cover;
+  flex-shrink: 0;
+}
+.legal-footer .footer-logo span {
+  font-size: 0.88rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-primary);
+}
+.legal-footer .footer-links {
+  display: flex; gap: 1.5rem; flex-wrap: wrap;
+}
+.legal-footer .footer-links a {
+  font-size: 0.74rem; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-muted); text-decoration: none;
+  transition: color var(--transition);
+}
+.legal-footer .footer-links a:hover { color: var(--text-primary); }
+
+.legal-footer .footer-legal {
+  padding-top: 1.8rem;
+  display: flex; flex-direction: column; gap: 0.35rem;
+}
+.legal-footer .footer-legal p {
+  font-size: 0.74rem; font-weight: 300;
+  color: var(--text-muted); line-height: 1.7;
+  margin: 0;
+}
+.legal-footer .footer-legal strong {
+  color: var(--text-secondary); font-weight: 600;
+}
+.legal-footer .footer-copy { margin-top: 0.5rem; }
+
+@media (max-width: 600px) {
+  .legal-main { padding-top: 104px; }
+  .legal-details dl { grid-template-columns: 1fr; gap: 0.2rem; }
+  .legal-details dd { margin-bottom: 0.8rem; }
+  .legal-details dd:last-child { margin-bottom: 0; }
+
+  .legal-footer .footer-top {
+    flex-direction: column; text-align: center; gap: 1rem;
+  }
+  .legal-footer .footer-links { justify-content: center; gap: 1rem; }
+  .legal-footer .footer-legal { text-align: center; }
+}

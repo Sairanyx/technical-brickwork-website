@@ -8,9 +8,12 @@ export default defineConfig({
     outDir: 'dist',
     rollupOptions: {
       input: {
-        main:  resolve(__dirname, 'index.html'),
-        quote: resolve(__dirname, 'quote.html'),
-        admin: resolve(__dirname, 'admin.html')
+        main:    resolve(__dirname, 'index.html'),
+        quote:   resolve(__dirname, 'quote.html'),
+        admin:   resolve(__dirname, 'admin.html'),
+        privacy: resolve(__dirname, 'privacy.html'),
+        cookies: resolve(__dirname, 'cookies.html'),
+        terms:   resolve(__dirname, 'terms.html')
       }
     }
   }
