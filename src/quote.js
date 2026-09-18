@@ -1,21 +1,19 @@
 // src/quote.js
 // Quote form — 2-step flow with Supabase + Netlify Forms
 
-const SUPABASE_URL  = import.meta.env.VITE_SUPABASE_URL
-const SUPABASE_KEY  = import.meta.env.VITE_SUPABASE_ANON_KEY
+import { initTransitions } from './components/transitions.js'
 
-async function saveToSupabase(payload) {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/quotes`, {
+initTransitions()
+
+// Posts to a Netlify Function rather than straight to Supabase, so no
+// database key is shipped to the browser.
+async function saveEnquiry(payload) {
+  const res = await fetch('/.netlify/functions/submit-quote', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': SUPABASE_KEY,
-      'Authorization': `Bearer ${SUPABASE_KEY}`,
-      'Prefer': 'return=minimal'
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
   })
-  if (!res.ok) throw new Error(`Supabase error: ${res.status}`)
+  if (!res.ok) throw new Error(`Submit failed: ${res.status}`)
 }
 
 async function sendNetlifyForm(payload) {
@@ -97,19 +95,44 @@ document.addEventListener('DOMContentLoaded', () => {
       message:        data.message
     }
 
-    try {
-      await Promise.all([
-        saveToSupabase(payload),
-        sendNetlifyForm(payload)
-      ])
-    } catch (err) {
-      console.error('Submission error:', err)
+    // The database write and the email notification are independent: either
+    // one reaching us means the enquiry is not lost.
+    const [saved, emailed] = await Promise.allSettled([
+      saveEnquiry(payload),
+      sendNetlifyForm(payload)
+    ])
+
+    if (saved.status === 'rejected' && emailed.status === 'rejected') {
+      console.error('Submission failed:', saved.reason, emailed.reason)
+      btnSubmit.textContent = 'Send My Request'
+      btnSubmit.disabled = false
+      showError()
+      return
     }
+
+    if (saved.status === 'rejected')   console.error('Save failed:', saved.reason)
+    if (emailed.status === 'rejected') console.error('Email failed:', emailed.reason)
 
     step2.classList.remove('active')
     success.style.display = 'block'
     window.scrollTo({ top: 0, behavior: 'smooth' })
   })
+
+  // If nothing got through, say so and give them the phone number rather
+  // than pretending the enquiry was received.
+  function showError() {
+    let box = document.getElementById('submit-error')
+    if (!box) {
+      box = document.createElement('p')
+      box.id = 'submit-error'
+      box.className = 'submit-error'
+      btnSubmit.insertAdjacentElement('afterend', box)
+    }
+    box.innerHTML =
+      'Something went wrong sending your request. Please try again, or call us on ' +
+      '<a href="tel:+447438031478">+44 743 803 1478</a>.'
+    box.style.display = 'block'
+  }
 
   function shake(el) {
     el.style.transition = 'transform 0.1s'
