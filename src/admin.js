@@ -1,9 +1,47 @@
 // src/admin.js
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
-const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
+// Lead dashboard. All data access goes through /.netlify/functions/leads,
+// which verifies the Identity login server-side. No Supabase key is shipped
+// to the browser.
 
 let allLeads = []
 let currentFilter = 'all'
+
+// Escape anything that came from the public quote form before it goes near
+// innerHTML — a lead's name or message is attacker-controlled text.
+function esc(value) {
+  if (value === null || value === undefined) return ''
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+async function api(method, body) {
+  const user = window.netlifyIdentity?.currentUser()
+  if (!user) throw new Error('Not logged in')
+
+  // Refreshes the JWT when it is close to expiry.
+  const token = await user.jwt()
+
+  const res = await fetch('/.netlify/functions/leads', {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: body ? JSON.stringify(body) : undefined
+  })
+
+  if (res.status === 401) {
+    window.netlifyIdentity?.logout()
+    throw new Error('Session expired')
+  }
+  if (!res.ok) throw new Error(`Request failed: ${res.status}`)
+
+  return res.json()
+}
 
 function showAdmin() {
   document.getElementById('login-screen').style.display = 'none'
@@ -18,19 +56,14 @@ function showLogin() {
 
 async function loadLeads() {
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/quotes?order=created_at.desc`, {
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`
-      }
-    })
-    allLeads = await res.json()
+    allLeads = await api('GET')
     updateStats()
     renderLeads()
     const now = new Date()
     document.getElementById('last-updated').textContent =
       `Updated ${now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`
   } catch (err) {
+    console.error(err)
     document.getElementById('leads-list').innerHTML =
       '<div class="empty-state">Could not load leads.</div>'
   }
@@ -44,7 +77,7 @@ function updateStats() {
 
 function renderLeads() {
   const filtered = allLeads.filter(l => {
-    if (currentFilter === 'new') return l.status === 'new'
+    if (currentFilter === 'new')  return l.status === 'new'
     if (currentFilter === 'done') return l.status === 'done'
     return true
   })
@@ -63,52 +96,55 @@ function renderLeads() {
       hour: '2-digit', minute: '2-digit'
     })
     const isNew = lead.status === 'new'
-    const phone = lead.phone?.replace(/\s/g, '') || ''
-    const waMsg = encodeURIComponent(`Hi ${lead.name}, thanks for your enquiry with Technical Brickwork!`)
+
+    // Keep only digits and a leading + so a crafted phone value cannot break
+    // out of the href.
+    const phone   = String(lead.phone || '').replace(/[^\d+]/g, '')
+    const waPhone = phone.replace(/\D/g, '')
+    const waMsg   = encodeURIComponent(
+      `Hi ${lead.name || ''}, thanks for your enquiry with Technical Brickwork!`
+    )
 
     return `
-      <div class="lead-card ${isNew ? '' : 'done'}" id="lead-${lead.id}">
+      <div class="lead-card ${isNew ? '' : 'done'}" id="lead-${esc(lead.id)}">
         <div class="lead-header">
           <div class="lead-info">
-            <h3>${lead.name || 'Unknown'}${isNew ? '<span class="new-badge">New</span>' : ''}</h3>
+            <h3>${esc(lead.name) || 'Unknown'}${isNew ? '<span class="new-badge">New</span>' : ''}</h3>
             <div class="lead-meta">
-              <span>📍 ${lead.postcode || 'No postcode'}</span>
-              <span>📅 ${date} ${time}</span>
-              <span>📞 ${lead.contact_method || 'Not specified'}</span>
+              <span>${esc(lead.postcode) || 'No postcode'}</span>
+              <span>${date} ${time}</span>
+              <span>${esc(lead.contact_method) || 'Not specified'}</span>
             </div>
-            ${lead.service ? `<div style="margin-top:6px"><span class="service-badge">${lead.service}</span></div>` : ''}
+            ${lead.service ? `<div style="margin-top:6px"><span class="service-badge">${esc(lead.service)}</span></div>` : ''}
           </div>
         </div>
-        ${lead.message ? `<div class="lead-message">"${lead.message}"</div>` : ''}
+        ${lead.message ? `<div class="lead-message">"${esc(lead.message)}"</div>` : ''}
         <div class="lead-actions">
-          <a href="tel:${phone}" class="action-btn call">📞 Call</a>
-          <a href="https://wa.me/${phone.replace('+','')}?text=${waMsg}" class="action-btn whatsapp" target="_blank">💬 WhatsApp</a>
-          <button class="action-btn done-btn" onclick="window.markDone(${lead.id})">${isNew ? '✓ Mark Done' : '↩ Reopen'}</button>
+          <a href="tel:${esc(phone)}" class="action-btn call">Call</a>
+          <a href="https://wa.me/${esc(waPhone)}?text=${waMsg}" class="action-btn whatsapp" target="_blank" rel="noopener">WhatsApp</a>
+          <button class="action-btn done-btn" data-id="${esc(lead.id)}">${isNew ? 'Mark Done' : 'Reopen'}</button>
         </div>
       </div>
     `
   }).join('')
 }
 
-window.markDone = async function(id) {
-  const lead = allLeads.find(l => l.id === id)
+async function toggleStatus(id) {
+  const lead = allLeads.find(l => String(l.id) === String(id))
+  if (!lead) return
+
   const newStatus = lead.status === 'new' ? 'done' : 'new'
-  await fetch(`${SUPABASE_URL}/rest/v1/quotes?id=eq.${id}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': SUPABASE_KEY,
-      'Authorization': `Bearer ${SUPABASE_KEY}`
-    },
-    body: JSON.stringify({ status: newStatus })
-  })
-  lead.status = newStatus
-  updateStats()
-  renderLeads()
+  try {
+    await api('PATCH', { id: Number(id), status: newStatus })
+    lead.status = newStatus
+    updateStats()
+    renderLeads()
+  } catch (err) {
+    console.error('Could not update lead:', err)
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Filters
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'))
@@ -118,7 +154,12 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   })
 
-  // Netlify Identity
+  // Delegated so no global handler is exposed on window.
+  document.getElementById('leads-list')?.addEventListener('click', (e) => {
+    const btn = e.target.closest('.done-btn')
+    if (btn) toggleStatus(btn.dataset.id)
+  })
+
   const identity = window.netlifyIdentity
   if (!identity) {
     document.getElementById('leads-list').innerHTML =
@@ -126,38 +167,15 @@ document.addEventListener('DOMContentLoaded', () => {
     return
   }
 
-  identity.on('init', user => {
-    if (user) {
-      showAdmin()
-    } else {
-      showLogin()
-    }
-  })
+  identity.on('init', user => { user ? showAdmin() : showLogin() })
+  if (identity.currentUser()) showAdmin()
 
-  // Also check immediately in case init already fired
-  const currentUser = identity.currentUser()
-  if (currentUser) {
-    showAdmin()
-  }
+  identity.on('login',  () => { identity.close(); showAdmin() })
+  identity.on('logout', () => { allLeads = []; showLogin() })
 
-  identity.on('login', () => {
-    identity.close()
-    showAdmin()
-  })
+  document.getElementById('btn-login').addEventListener('click',  () => identity.open('login'))
+  document.getElementById('btn-logout').addEventListener('click', () => identity.logout())
 
-  identity.on('logout', () => {
-    showLogin()
-  })
-
-  document.getElementById('btn-login').addEventListener('click', () => {
-    identity.open('login')
-  })
-
-  document.getElementById('btn-logout').addEventListener('click', () => {
-    identity.logout()
-  })
-
-  // Auto-refresh every 60 seconds
   setInterval(() => {
     if (document.getElementById('admin-screen').style.display !== 'none') loadLeads()
   }, 60000)
