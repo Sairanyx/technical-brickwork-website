@@ -1,5 +1,5 @@
 /* ============================================================
-   TECHNICAL BRICKWORK — Stylesheet
+   TECHNICAL BRICKWORK - Stylesheet
    ============================================================ */
 
 /* Raleway is loaded via <link> in each page's <head>. An @import here would
@@ -684,10 +684,10 @@ h2.section-title {
   .gallery-grid { grid-template-columns: 1fr; grid-auto-rows: 220px; }
   .gallery-item:first-child { grid-column: span 1; }
 
-  /* Team — stack to 1 column on small phones */
+  /* Team: stack to 1 column on small phones */
   .team-grid { grid-template-columns: 1fr !important; max-width: 340px !important; }
 
-  /* Contact — stack and hide image */
+  /* Contact: stack and hide image */
   #contact > div { grid-template-columns: 1fr !important; }
   .contact-image { display: none; }
 
@@ -697,7 +697,7 @@ h2.section-title {
   .footer-legal { text-align: center; }
   .footer-copy { font-size: 0.7rem; }
 
-  /* Sticky call button — give space from bottom */
+  /* Sticky call button: give space from bottom */
   .sticky-call { display: flex; bottom: 1.2rem; right: 1rem; }
 
   /* Hero scroll hint fix */

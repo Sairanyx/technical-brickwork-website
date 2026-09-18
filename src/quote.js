@@ -1,5 +1,5 @@
 // src/quote.js
-// Quote form — 2-step flow with Supabase + Netlify Forms
+// Quote form. 2-step flow, submits via a Netlify Function.
 
 import { initTransitions } from './components/transitions.js'
 

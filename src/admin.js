@@ -7,7 +7,7 @@ let allLeads = []
 let currentFilter = 'all'
 
 // Escape anything that came from the public quote form before it goes near
-// innerHTML — a lead's name or message is attacker-controlled text.
+// innerHTML, since a lead's name or message is attacker-controlled text.
 function esc(value) {
   if (value === null || value === undefined) return ''
   return String(value)

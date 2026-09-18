@@ -1,7 +1,7 @@
 // netlify/functions/submit-quote.js
 //
 // Public endpoint for the quote form. Runs server-side so the browser never
-// holds a Supabase key at all — this one accepts writes only, and only the
+// holds a Supabase key at all. This one accepts writes only, and only the
 // seven fields below.
 
 const SUPABASE_URL = process.env.SUPABASE_URL
