@@ -8,12 +8,8 @@
 
 # ── Clean URLs ──
 # These must come before the catch-all below; Netlify applies the first match.
-
-# Never rewrite function calls into index.html.
-[[redirects]]
-  from = "/.netlify/functions/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
+# /.netlify/* is reserved and routed before redirects, so function calls do
+# not need a rule of their own here.
 [[redirects]]
   from = "/quote"
   to = "/quote.html"
