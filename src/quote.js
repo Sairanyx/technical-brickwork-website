@@ -13,6 +13,11 @@ async function saveEnquiry(payload) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
   })
+  if (res.status === 429) {
+    const err = new Error('Rate limited')
+    err.rateLimited = true
+    throw err
+  }
   if (!res.ok) throw new Error(`Submit failed: ${res.status}`)
 }
 
@@ -106,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Submission failed:', saved.reason, emailed.reason)
       btnSubmit.textContent = 'Send My Request'
       btnSubmit.disabled = false
-      showError()
+      showError(saved.reason?.rateLimited)
       return
     }
 
@@ -120,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // If nothing got through, say so and give them the phone number rather
   // than pretending the enquiry was received.
-  function showError() {
+  function showError(rateLimited) {
     let box = document.getElementById('submit-error')
     if (!box) {
       box = document.createElement('p')
@@ -128,9 +133,11 @@ document.addEventListener('DOMContentLoaded', () => {
       box.className = 'submit-error'
       btnSubmit.insertAdjacentElement('afterend', box)
     }
-    box.innerHTML =
-      'Something went wrong sending your request. Please try again, or call us on ' +
-      '<a href="tel:+447438031478">+44 743 803 1478</a>.'
+    box.innerHTML = rateLimited
+      ? 'That is a lot of requests in a short time. Please wait a minute and try ' +
+        'again, or call us on <a href="tel:+447438031478">+44 743 803 1478</a>.'
+      : 'Something went wrong sending your request. Please try again, or call us on ' +
+        '<a href="tel:+447438031478">+44 743 803 1478</a>.'
     box.style.display = 'block'
   }
 

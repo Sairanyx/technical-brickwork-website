@@ -23,6 +23,34 @@ function clean(value, max) {
   return String(value).replace(/\s+/g, ' ').trim().slice(0, max)
 }
 
+// A genuine enquiry is well under 4KB. Anything larger is junk, and parsing it
+// wastes function time.
+const MAX_BODY_BYTES = 8 * 1024
+
+// Best-effort throttle. Function instances are not shared, so this slows a
+// flood from one source rather than stopping it outright.
+const RATE_LIMIT = 5             // submissions
+const RATE_WINDOW_MS = 60 * 1000 // per minute, per IP
+const recent = new Map()
+
+function rateLimited(ip) {
+  if (!ip) return false
+  const now = Date.now()
+
+  for (const [key, times] of recent) {
+    const kept = times.filter(t => now - t < RATE_WINDOW_MS)
+    if (kept.length) recent.set(key, kept)
+    else recent.delete(key)
+  }
+
+  const times = recent.get(ip) || []
+  if (times.length >= RATE_LIMIT) return true
+
+  times.push(now)
+  recent.set(ip, times)
+  return false
+}
+
 export async function handler(event) {
   if (event.httpMethod !== 'POST') return reply(405, { error: 'Method not allowed' })
 
@@ -31,9 +59,20 @@ export async function handler(event) {
     return reply(500, { error: 'Server not configured' })
   }
 
+  const body = event.body || '{}'
+  if (Buffer.byteLength(body, 'utf8') > MAX_BODY_BYTES) {
+    return reply(413, { error: 'Request too large' })
+  }
+
+  const ip = event.headers['x-nf-client-connection-ip'] ||
+             (event.headers['x-forwarded-for'] || '').split(',')[0].trim()
+  if (rateLimited(ip)) {
+    return reply(429, { error: 'Too many requests. Please try again shortly.' })
+  }
+
   let input
   try {
-    input = JSON.parse(event.body || '{}')
+    input = JSON.parse(body)
   } catch {
     return reply(400, { error: 'Invalid JSON' })
   }

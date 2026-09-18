@@ -48,6 +48,19 @@ export async function handler(event, context) {
   const user = context.clientContext && context.clientContext.user
   if (!user) return reply(401, { error: 'Not authorised' })
 
+  // Being logged in is not enough on its own: an account must also be on the
+  // allowlist, so an unexpected Identity user cannot read customer enquiries.
+  const allowed = (process.env.ADMIN_EMAILS || '')
+    .split(',')
+    .map(e => e.trim().toLowerCase())
+    .filter(Boolean)
+
+  const email = String(user.email || '').toLowerCase()
+  if (allowed.length && !allowed.includes(email)) {
+    console.warn('Rejected lead access for:', email)
+    return reply(403, { error: 'Not authorised' })
+  }
+
   try {
     if (event.httpMethod === 'GET') {
       const res = await supabase('quotes?order=created_at.desc')
