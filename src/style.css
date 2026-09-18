@@ -2,7 +2,8 @@
    TECHNICAL BRICKWORK — Stylesheet
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap');
+/* Raleway is loaded via <link> in each page's <head>. An @import here would
+   serialise the font fetch behind this stylesheet. */
 
 :root {
   --bg-base:    #1a1a1a;
@@ -132,7 +133,8 @@ h2.section-title {
   color: var(--text-primary);
 }
 .nav-links {
-  display: flex; align-items: center; gap: 2.5rem;
+  display: flex; align-items: center;
+  gap: clamp(1.4rem, 2.6vw, 2.5rem);
 }
 .nav-links a {
   font-size: 0.78rem;
@@ -174,6 +176,11 @@ h2.section-title {
   color: var(--text-primary);
   padding: 1.1rem 0;
   border-bottom: 1px solid var(--border);
+}
+.mobile-nav .mobile-nav-cta {
+  color: var(--accent);
+  border-bottom: none;
+  margin-top: 0.5rem;
 }
 
 /* ── HERO ── */
@@ -461,28 +468,62 @@ h2.section-title {
   display: grid; grid-template-columns: 1fr 1.2fr;
   gap: 6rem; align-items: start;
 }
+.contact-details {
+  display: flex; flex-direction: column;
+  border-top: 1px solid var(--border);
+  margin-top: 0.5rem;
+}
 .contact-detail {
-  display: flex; gap: 1.2rem;
-  align-items: flex-start; margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  column-gap: 1.1rem;
+  align-items: start;
+  margin: 0;
+  padding: 1.35rem 0;
+  border-bottom: 1px solid var(--border);
 }
+.contact-detail:last-child { border-bottom: none; }
+
+/* Bare line icons, no box: the value should carry the weight, not the icon. */
 .contact-icon {
-  width: 40px; height: 40px; flex-shrink: 0;
-  background: var(--bg-raised);
-  border: 1px solid var(--border-accent);
+  width: 22px; height: 22px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 0.9rem;
+  background: none;
+  border: none;
+  color: var(--accent);
+  opacity: 0.85;
+  margin-top: 1px;
 }
+.contact-icon svg { width: 18px; height: 18px; display: block; }
+
+.contact-text { min-width: 0; }
+
 .contact-detail h4 {
-  font-size: 0.66rem; font-weight: 700;
-  letter-spacing: 0.24em; text-transform: uppercase;
-  color: var(--text-muted); margin-bottom: 4px;
+  font-size: 0.64rem; font-weight: 700;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 5px;
+  line-height: 1;
 }
 .contact-detail p,
 .contact-detail a {
-  font-size: 0.92rem; font-weight: 400;
+  display: block;
+  font-size: 0.98rem; font-weight: 500;
   color: var(--text-primary);
+  line-height: 1.4;
+  margin: 0;
+  overflow-wrap: anywhere;
 }
+.contact-detail a { transition: color var(--transition); }
 .contact-detail a:hover { color: var(--accent); }
+
+.contact-note {
+  display: block;
+  font-size: 0.78rem; font-weight: 300;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-top: 3px;
+}
 .contact-form {
   display: flex; flex-direction: column; gap: 0.9rem;
 }
@@ -520,10 +561,27 @@ h2.section-title {
   border-top: 1px solid var(--border);
   padding: 2.5rem 0;
 }
-#footer .container {
+#footer .container,
+.legal-footer .footer-inner {
+  display: block;
+}
+.footer-top {
   display: flex; align-items: center;
   justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;
+  padding-bottom: 1.8rem;
+  border-bottom: 1px solid var(--border);
 }
+/* Statutory company disclosure */
+.footer-legal {
+  padding-top: 1.8rem;
+  display: flex; flex-direction: column; gap: 0.35rem;
+}
+.footer-legal p {
+  font-size: 0.74rem; font-weight: 300;
+  color: var(--text-muted); line-height: 1.7;
+}
+.footer-legal strong { color: var(--text-secondary); font-weight: 600; }
+.footer-legal .footer-copy { margin-top: 0.5rem; }
 .footer-logo {
   display: flex; align-items: center; gap: 12px;
 }
@@ -575,6 +633,22 @@ h2.section-title {
 }
 .reveal.visible { opacity: 1; transform: translateY(0); }
 
+/* ── PAGE TRANSITIONS ── */
+/* Entry/exit opacity lives in the inline <head> style of each page so it
+   applies before this file loads. Only the cross-document animation is here. */
+@view-transition { navigation: auto; }
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.28s;
+  animation-timing-function: ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation: none; }
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 960px) {
   .nav-links { display: none; }
@@ -592,6 +666,8 @@ h2.section-title {
   .contact-cards { grid-template-columns: 1fr !important; }
   .team-grid { grid-template-columns: 1fr 1fr !important; }
 }
+
+/* Footer mobile handled in the 600px block below */
 
 @media (max-width: 600px) {
   /* Fix overflow/side line issue */
@@ -616,8 +692,9 @@ h2.section-title {
   .contact-image { display: none; }
 
   /* Footer */
-  #footer .container { flex-direction: column; text-align: center; gap: 1rem; }
+  .footer-top { flex-direction: column; text-align: center; gap: 1rem; }
   .footer-links { justify-content: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-legal { text-align: center; }
   .footer-copy { font-size: 0.7rem; }
 
   /* Sticky call button — give space from bottom */

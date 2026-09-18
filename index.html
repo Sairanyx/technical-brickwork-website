@@ -65,7 +65,32 @@
   </script>
 
   <meta name="theme-color" content="#1a1a1a" />
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+  <!-- Start the font fetch immediately rather than waiting on the JS module. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap" />
+
+  <!-- Base colours inline so the page never paints unstyled while the
+       stylesheet is still loading. -->
+  <style>
+    html { background: #1a1a1a; }
+    body {
+      background: #1a1a1a;
+      color: #f2f2f2;
+      margin: 0;
+      font-family: 'Raleway', system-ui, sans-serif;
+      opacity: 0;
+    }
+    html.css-ready body { opacity: 1; transition: opacity 0.22s ease; }
+    /* Safety net: if scripts are blocked or fail, show the page anyway. */
+    @media (scripting: none) { body { opacity: 1; } }
+    html.page-exit body { opacity: 0; }
+    @media (prefers-reduced-motion: reduce) {
+      body, html.css-ready body { opacity: 1; transition: none; }
+    }
+  </style>
+
   <script type="module" src="/src/main.js"></script>
   <link rel="icon" type="image/png" href="/images/logo.png" />
 </head>
@@ -94,6 +119,7 @@
       <li><a href="#services">Services</a></li>
       <li><a href="#gallery">Gallery</a></li>
       <li><a href="#team">Team</a></li>
+      <li><a href="#contact">Contact</a></li>
       <li><a href="/quote" class="btn btn-primary">Get a Quote</a></li>
     </ul>
     <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -107,7 +133,8 @@
   <a href="#services">Services</a>
   <a href="#gallery">Gallery</a>
   <a href="#team">Team</a>
-  <a href="#contact">Get a Quote</a>
+  <a href="#contact">Contact</a>
+  <a href="/quote" class="mobile-nav-cta">Get a Quote</a>
 </nav>
 
 <!-- ══ HERO ══ -->
@@ -128,7 +155,6 @@
       </div>
     </div>
   </div>
-  <p class="hero-scroll-hint container">Scroll to explore</p>
 </section>
 
 <!-- ══ STATS ══ -->
@@ -345,7 +371,7 @@
         <img src="/images/eduard.jpg" alt="Eduard Rednic" loading="lazy" />
         <div class="team-info">
           <h3>Eduard Rednic</h3>
-          <p class="team-role">Administrator</p>
+          <p class="team-role">Systems &amp; Administration</p>
         </div>
       </article>
     </div>
@@ -363,28 +389,47 @@
       </p>
       <a href="/quote" class="btn btn-primary" style="margin-bottom:2.5rem;align-self:flex-start">Get a Free Quote →</a>
 
-      <div style="display:flex;flex-direction:column;gap:1.2rem;border-top:1px solid var(--border);padding-top:2rem">
-        <div class="contact-detail" style="margin:0">
-          <div class="contact-icon">&#9990;</div>
-          <div>
+      <div class="contact-details">
+        <div class="contact-detail">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.09 4.18 2 2 0 0 1 4.08 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+          </div>
+          <div class="contact-text">
             <h4>Phone</h4>
             <a href="tel:+447438031478">+44 743 803 1478</a>
-            <span style="font-size:0.8rem;color:var(--text-muted);display:block">Stefan (Owner)</span>
+            <span class="contact-note">Stefan (Owner)</span>
           </div>
         </div>
-        <div class="contact-detail" style="margin:0">
-          <div class="contact-icon">&#9993;</div>
-          <div>
+
+        <div class="contact-detail">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <path d="m22 7-10 6L2 7"/>
+            </svg>
+          </div>
+          <div class="contact-text">
             <h4>Email</h4>
             <a href="mailto:info@technicalbrickwork.co.uk">info@technicalbrickwork.co.uk</a>
           </div>
         </div>
-        <div class="contact-detail" style="margin:0">
-          <div class="contact-icon">&#8982;</div>
-          <div>
+
+        <div class="contact-detail">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <div class="contact-text">
             <h4>Location</h4>
             <p>Harrow, London</p>
-            <span style="font-size:0.8rem;color:var(--text-muted);display:block">Serving London and UK wide</span>
+            <span class="contact-note">Serving London and UK wide</span>
           </div>
         </div>
       </div>
@@ -400,30 +445,36 @@
 <!-- ══ FOOTER ══ -->
 <footer id="footer">
   <div class="container">
-    <a href="#hero" class="footer-logo">
-      <img src="/images/logo.png" alt="Technical Brickwork" />
-      <span>Technical Brickwork</span>
-    </a>
-    <p class="footer-copy">2025 Technical Brickwork Ltd. All rights reserved. Harrow, London.</p>
-    <nav class="footer-links">
-      <a href="#about">About</a>
-      <a href="#services">Services</a>
-      <a href="#contact">Contact</a>
-      <a href="/admin" style="opacity:0.2;font-size:0.6rem">Admin</a>
-    </nav>
+    <div class="footer-top">
+      <a href="#hero" class="footer-logo">
+        <img src="/images/logo.png" alt="Technical Brickwork" />
+        <span>Technical Brickwork</span>
+      </a>
+      <nav class="footer-links">
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#contact">Contact</a>
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/cookies">Cookie Policy</a>
+        <a href="/terms">Website Terms</a>
+      </nav>
+    </div>
+
+    <div class="footer-legal">
+      <p>
+        <strong>Technical Brickwork Ltd</strong> · Registered in England and Wales ·
+        Company No. 11111932 · VAT No. GB 406 579 578
+      </p>
+      <p>Registered office: 14 Rusland Park Road, Harrow, HA1 1UT</p>
+      <p class="footer-copy">
+        © <span id="footer-year">2026</span> Technical Brickwork Ltd. All rights reserved.
+      </p>
+    </div>
   </div>
 </footer>
 
-<script>
-  if (window.netlifyIdentity) {
-    window.netlifyIdentity.on("init", user => {
-      if (!user) {
-        window.netlifyIdentity.on("login", () => {
-          document.location.href = "/admin"
-        })
-      }
-    })
-  }
-</script>
+<!-- Identity is only needed for the admin login, so it loads after the page
+     rather than blocking the first paint. -->
+<script defer src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </body>
 </html>
